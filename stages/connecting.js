@@ -15,17 +15,17 @@ class ConnectingStage extends Stage {
         const token = ConfigReader.getKey('token');
         const username = ConfigReader.getKey('username');
 
-        if (!token || !username) return new (require('./login.js'))();
+        if (!token || !username) return new (require('./loginType.js'))();
 
         const credentialsAction = new AnimatedActionText('Checking credentials with server...');
         credentialsAction.start();
 
         response = await ServerQuery.GET('check-token', token, { username });
         credentialsAction.stop();
-        if (!response.ok) return new (require('./login.js'))(`Invalid credentials.`);
+        if (!response.ok) return new (require('./loginType.js'))(`Invalid credentials.`);
 
         let json = await response.json();
-        if (!json.username || json.username != username) return new (require('./login.js'))('Invalid credentials.');
+        if (!json.username || json.username != username) return new (require('./loginType.js'))('Invalid credentials.');
 
         console.log('\nConnected!');
         return new (require('./home.js'))();

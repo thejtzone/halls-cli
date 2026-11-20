@@ -1,4 +1,5 @@
-const { Stage, ServerQuery, ConfigReader } = require("../common.js")
+const { Stage, ServerQuery, ConfigReader } = require("../common.js");
+const Renderer = require("../renderer.js");
 
 class HomeStage extends Stage {
     constructor() {
@@ -21,7 +22,7 @@ class HomeStage extends Stage {
     }
 
     async loop() {
-        this.displayMsg(`Welcome back, ${this.display_name ? this.display_name : this.username}!`);
+        this.displayMsg(`${Renderer.Colours.Cursor.HIDE_CURSOR}Welcome back, ${this.display_name ? this.display_name : this.username}!`);
         console.log(`You have [?] unread messages.`);
         return this;
     }

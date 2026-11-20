@@ -7,7 +7,7 @@ class Stage {
     }
 
     displayMsg(message) {
-        Renderer.clear();
+        // Renderer.clear();
         Renderer.logo();
         console.log(`\n\n${message}`);
     }

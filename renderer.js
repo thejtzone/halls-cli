@@ -1,5 +1,5 @@
 class Renderer {
-    static Colours = class {
+    Colours = class {
         static FG = class {
             static BLACK = '\x1b[30m';
             static RED = '\x1b[31m';
@@ -70,15 +70,15 @@ class Renderer {
         }
     }
 
-    static get width() { return process.stdout.columns; }
-    static centre(width) { return Math.floor((Renderer.width - width) / 2); }
+    get width() { return process.stdout.columns; }
+    centre(width) { return Math.floor((this.width - width) / 2); }
 
-    static clear() { process.stdout.write(Renderer.Colours.CLEAR_SCREEN) }
-    static logo() { 
-        const W = Renderer.Colours.FG.WHITE;
-        const B = Renderer.Colours.FG.BLACK;
-        const LG = Renderer.Colours.FG.rgb(153, 229, 80);
-        const DG = Renderer.Colours.FG.rgb(75, 105, 47);
+    clear() { process.stdout.write(this.Colours.CLEAR_SCREEN) }
+    logo() { 
+        const W = this.Colours.FG.WHITE;
+        const B = this.Colours.FG.BLACK;
+        const LG = this.Colours.FG.rgb(153, 229, 80);
+        const DG = this.Colours.FG.rgb(75, 105, 47);
 
         const LOGO = `
 00000WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW0
@@ -103,7 +103,7 @@ WBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW0
         `.trim();
 
-        const terminalWidth = Renderer.width;
+        const terminalWidth = this.width;
         const logoWidth = LOGO.split('\n')[0].length * 2; // each char is 2 pixels
         const x = Math.floor((terminalWidth - logoWidth) / 2);
         
@@ -111,8 +111,14 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (x >= 0) centered = LOGO.split('\n').map(line => ' '.repeat(x) + line).join('\n');
         else centered = LOGO.split('\n').map(line => line.slice(0, terminalWidth / 2)).join('\n');
 
-        process.stdout.write(centered.replaceAll('0', '  ').replaceAll('W', W + '██').replaceAll('B', B + '██').replaceAll('g', LG + '██').replaceAll('G', DG + '██'));
+        if (!this.terminalWidth || terminalWidth !== this.terminalWidth)
+            this.clear();
+
+        this.terminalWidth = terminalWidth;
+
+        const text = centered.replaceAll('0', '  ').replaceAll('W', W + '██').replaceAll('B', B + '██').replaceAll('g', LG + '██').replaceAll('G', DG + '██');
+        process.stdout.write(this.Colours.Cursor.SET_CURSOR(0, 0) + '\r' + text)
     }
 }
 
-module.exports = Renderer
+module.exports = new Renderer()

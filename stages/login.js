@@ -4,7 +4,7 @@ const Renderer = require('../renderer.js');
 class LoginStage extends Stage {
     constructor(login_msg='') { 
         super(); 
-        this.msg = login_msg; 
+        this.msg = login_msg;
 
         this._usernameInput = '';
         this._usernameDone = false;
@@ -19,14 +19,15 @@ class LoginStage extends Stage {
     }
 
     async loop() {
-        this.displayMsg(`You need to login${this.msg ? ` - ${this.msg}!` : '!'}\n${Renderer.Colours.ITALIC}If you do not have an account, please create one by using the Halls desktop application.${Renderer.Colours.RESET}\n\n`);
+        this.displayMsg(`${this.msg ? ` - ${this.msg}! - ` : ''}Login to your account.\n\n`);
 
-        process.stdout.write(`${Renderer.Colours.Cursor.SHOW_CURSOR}Username: ${this._usernameInput}`);
+        process.stdout.write(`${Renderer.Colours.CLEAR_LINE + Renderer.Colours.Cursor.SHOW_CURSOR}Username: ${this._usernameInput}`);
         if (!this._usernameDone) return this._returnClass ? this._returnClass : this;
 
-        process.stdout.write(`\nPassword: ${'*'.repeat(this._passwordInput.length)}`);
+        process.stdout.write(`\n${Renderer.Colours.CLEAR_LINE}Password: ${'*'.repeat(this._passwordInput.length)}`);
         if (!this._passwordDone) return this._returnClass ? this._returnClass : this;
 
+        process.stdout.write(Renderer.Colours.Cursor.HIDE_CURSOR);
         if (!this._attemptingLogin) this._attemptLogin();
 
         process.stdout.write(`\n\n${this._loginActionText.ctext}`);

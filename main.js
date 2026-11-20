@@ -6,8 +6,10 @@ let stage = new ConnectingStage();
 async function run() {
     try {
         while (true) {
+            old_stage = stage;
             stage = await stage.loop();
             await new Promise(r => setTimeout(r, 33));
+            if (stage !== old_stage) Renderer.clear()
         }
     } catch (err) {
         exitHandler({ error: err.message }, 1);
