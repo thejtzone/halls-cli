@@ -71,6 +71,7 @@ class Renderer {
     }
 
     get width() { return process.stdout.columns; }
+    get height() { return process.stdout.rows; }
     centre(width) { return Math.floor((this.width - width) / 2); }
 
     clear() { process.stdout.write(this.Colours.CLEAR_SCREEN) }
@@ -114,7 +115,11 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (!this.terminalWidth || terminalWidth !== this.terminalWidth)
             this.clear();
 
+        if (!this.terminalHeight || this.height !== this.terminalHeight)
+            this.clear();
+
         this.terminalWidth = terminalWidth;
+        this.terminalHeight = this.height;
 
         const text = centered.replaceAll('0', '  ').replaceAll('W', W + '██').replaceAll('B', B + '██').replaceAll('g', LG + '██').replaceAll('G', DG + '██');
         process.stdout.write(this.Colours.Cursor.SET_CURSOR(0, 0) + '\r' + text)
